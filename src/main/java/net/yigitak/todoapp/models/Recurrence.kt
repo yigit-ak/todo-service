@@ -1,6 +1,5 @@
 package net.yigitak.todoapp.models
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.DocumentReference
@@ -12,9 +11,7 @@ data class Recurrence(
     @Id
     var id: String? = null,
 
-    @JsonIgnore
-    @DocumentReference
-    var owner: User? = null,
+    var ownerId: String,
 
     @DocumentReference
     var tag: Tag? = null,
@@ -28,7 +25,6 @@ data class Recurrence(
     var lastOccurrence: LocalDate? = null,
     var period: Int = 0,
 
-    @JsonIgnore
     var timeCreated: LocalDateTime = LocalDateTime.now()
 ) {
     val isForever: Boolean
