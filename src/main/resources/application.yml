@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: To-Do App
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/
+      database: todoappDB
+  main:
+    banner-mode: off
+  output:
+    ansi:
+      enabled: always
