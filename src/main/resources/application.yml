@@ -1,12 +1,22 @@
 spring:
+
   application:
     name: To-Do App
+
   data:
     mongodb:
       uri: mongodb://localhost:27017/
       database: todoappDB
+
   main:
     banner-mode: off
+
   output:
     ansi:
       enabled: always
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import net.yigitak.todoapp.annotations.JwtSubject;
 import net.yigitak.todoapp.dto.CreateRecurrenceDto;
 import net.yigitak.todoapp.models.Recurrence;
 import net.yigitak.todoapp.services.RecurrenceService;
@@ -20,7 +21,7 @@ public class RecurrenceController {
 
   @GetMapping
   public ResponseEntity<List<Recurrence>> getAllRecurrences(
-      @RequestHeader("X-User-Id") String userId) {
+      @JwtSubject String userId) {
 
     List<Recurrence> recurrences = recurrenceService.getAllRecurrencesByOwnerId(userId);
     return ResponseEntity.ok(recurrences);
@@ -28,7 +29,7 @@ public class RecurrenceController {
 
   @PostMapping
   public ResponseEntity<Recurrence> createRecurrence(
-      @RequestHeader("X-User-Id") String userId, @RequestBody @Valid CreateRecurrenceDto dto) {
+          @JwtSubject String userId, @RequestBody @Valid CreateRecurrenceDto dto) {
 
     Recurrence newRecurrence = recurrenceService.createRecurrence(dto, userId);
     URI location =
@@ -41,7 +42,7 @@ public class RecurrenceController {
 
   @GetMapping("/{recurrence-id}")
   public ResponseEntity<Recurrence> getRecurrenceById(
-      @RequestHeader("X-User-Id") String userId,
+      @JwtSubject String userId,
       @PathVariable("recurrence-id") String recurrenceId) {
 
     Recurrence recurrence = recurrenceService.getRecurrenceByIdAndOwnerId(recurrenceId, userId);
@@ -50,7 +51,7 @@ public class RecurrenceController {
 
   @DeleteMapping("/{recurrence-id}")
   public ResponseEntity<Void> deleteRecurrenceById(
-      @RequestHeader("X-User-Id") String userId,
+      @JwtSubject String userId,
       @PathVariable("recurrence-id") String recurrenceId) {
 
     recurrenceService.deleteRecurrenceByIdAndOwnerId(recurrenceId, userId);
@@ -59,7 +60,7 @@ public class RecurrenceController {
 
   //  @PatchMapping("/{recurrence-id}") // todo
   //  public ResponseEntity<Recurrence> updateRecurrenceById(
-  //      @RequestHeader("X-User-Id") String userId,
+  //      @JwtSubject String userId,
   //      @PathVariable("recurrence-id") String recurrenceId,
   //      @RequestBody Map<String, Object> dto) {
   //

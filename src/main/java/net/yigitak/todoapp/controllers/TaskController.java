@@ -4,12 +4,14 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import net.yigitak.todoapp.annotations.JwtSubject;
 import net.yigitak.todoapp.dto.CreateSubtaskDto;
 import net.yigitak.todoapp.dto.CreateTaskDto;
 import net.yigitak.todoapp.models.Task;
 import net.yigitak.todoapp.services.DateService;
 import net.yigitak.todoapp.services.TaskService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,14 +25,15 @@ public class TaskController {
   private final DateService dateService;
 
   @GetMapping
-  public ResponseEntity<List<Task>> getAllTasks(@RequestHeader("X-User-Id") String userId) {
+  public ResponseEntity<List<Task>> getAllTasks(@JwtSubject String userId) {
     List<Task> tasks = taskService.getAllTasksByOwnerId(userId);
     return ResponseEntity.ok(tasks);
   }
 
   @PostMapping
   public ResponseEntity<Task> createTask(
-      @RequestHeader("X-User-Id") String userId, @RequestBody CreateTaskDto dto) {
+           @JwtSubject String userId,
+          @RequestBody CreateTaskDto dto) {
 
     Task newTask = taskService.createTask(dto, userId);
     URI location =
@@ -43,7 +46,7 @@ public class TaskController {
 
   @GetMapping("/{task-id}")
   public ResponseEntity<Task> getTaskById(
-      @RequestHeader("X-User-Id") String userId, @PathVariable("task-id") String taskId) {
+      @JwtSubject String userId, @PathVariable("task-id") String taskId) {
 
     Task task = taskService.getTaskByIdAndOwnerId(taskId, userId);
     return ResponseEntity.ok(task);
@@ -51,7 +54,7 @@ public class TaskController {
 
   @DeleteMapping("/{task-id}")
   public ResponseEntity<Task> deleteTaskById(
-      @RequestHeader("X-User-Id") String userId, @PathVariable("task-id") String taskId) {
+      @JwtSubject String userId, @PathVariable("task-id") String taskId) {
 
     taskService.deleteTaskByIdAndOwnerId(taskId, userId);
     return ResponseEntity.noContent().build();
@@ -59,7 +62,7 @@ public class TaskController {
 
   //  @PatchMapping("/{task-id}")
   //  public ResponseEntity<Task> updateTaskById(
-  //      @RequestHeader("X-User-Id") String userId,
+  //      @JwtSubject String userId,
   //      @PathVariable("task-id") String taskId,
   //      @RequestBody Map<String, Object> dto) {
   //
@@ -69,7 +72,7 @@ public class TaskController {
 
   @PostMapping("/{task-id}/subtasks")
   public ResponseEntity<Task> addSubtaskToTask(
-      @RequestHeader("X-User-Id") String userId,
+      @JwtSubject String userId,
       @PathVariable("task-id") String parentTaskId,
       @RequestBody CreateSubtaskDto dto) {
 
@@ -83,7 +86,7 @@ public class TaskController {
   }
 
   //    @PatchMapping("/{task-id}/subtasks/{subtask-id}")
-  //    public ResponseEntity<Task> updateSubtask(@RequestHeader("X-User-Id") String
+  //    public ResponseEntity<Task> updateSubtask(@JwtSubject String
   // userId,@PathVariable("task-id") String taskId,
   //                                              @PathVariable("subtask-id") String subtaskId,
   //                                              @RequestBody Subtask subtask
@@ -95,7 +98,7 @@ public class TaskController {
 
   @DeleteMapping("/{task-id}/subtasks/{subtask-id}")
   public ResponseEntity<Task> deleteSubtask(
-      @RequestHeader("X-User-Id") String userId,
+      @JwtSubject String userId,
       @PathVariable("task-id") String parentTaskId,
       @PathVariable("subtask-id") String subtaskId) {
 
@@ -105,10 +108,17 @@ public class TaskController {
 
   @GetMapping("/date")
   public ResponseEntity<List<Task>> getAllTasksAssignedOn(
-      @RequestHeader("X-User-Id") String userId,
-      @RequestParam() @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+      @JwtSubject String userId,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
     List<Task> tasks = dateService.getAllTasksByAssignedDate(userId, date);
     return ResponseEntity.ok(tasks);
   }
+
+    @GetMapping("/today")
+    public ResponseEntity<List<Task>> getAllTasksAssignedToday(@JwtSubject String userId) {
+    LocalDate today = LocalDate.now();
+    List<Task> tasks = dateService.getAllTasksByAssignedDate(userId, today);
+    return ResponseEntity.ok(tasks);
+    }
 }

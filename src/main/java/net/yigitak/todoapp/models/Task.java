@@ -17,9 +17,11 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 @Document("tasks")
 public class Task {
 
-  @Id private String id;
+  @Id
+  private String id;
 
-  @DocumentReference private Recurrence recurrence;
+  @DocumentReference
+  private Recurrence recurrence;
 
   private String ownerId;
   private Set<Subtask> subtasks = new HashSet<>();
