@@ -1,15 +1,19 @@
 package net.yigitak.todoapp.services;
 
-import java.time.LocalDate;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.dto.CreateSubtaskDto;
 import net.yigitak.todoapp.dto.CreateTaskDto;
 import net.yigitak.todoapp.exceptions.EntityNotFoundException;
 import net.yigitak.todoapp.mappers.TaskMapper;
-import net.yigitak.todoapp.models.*;
+import net.yigitak.todoapp.models.Recurrence;
+import net.yigitak.todoapp.models.Subtask;
+import net.yigitak.todoapp.models.Task;
 import net.yigitak.todoapp.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -93,4 +97,13 @@ public class TaskService {
         .findLastCreatedRecurrentTask(recurrence, ownerId)
         .orElseThrow(() -> new EntityNotFoundException("No recurrent task found."));
   }
+
+
+  public Task toggleCompleted( String userId, String taskId ) {
+
+    Task task = getTaskByIdAndOwnerId(taskId, userId);
+    task.setCompleted(!task.getCompleted());
+    return taskRepository.save(task);
+  }
+
 }

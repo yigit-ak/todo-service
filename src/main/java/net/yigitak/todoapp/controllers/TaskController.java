@@ -1,8 +1,6 @@
 package net.yigitak.todoapp.controllers;
 
-import java.net.URI;
-import java.time.LocalDate;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.annotations.JwtSubject;
 import net.yigitak.todoapp.dto.CreateSubtaskDto;
@@ -11,10 +9,13 @@ import net.yigitak.todoapp.models.Task;
 import net.yigitak.todoapp.services.DateService;
 import net.yigitak.todoapp.services.TaskService;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -121,4 +122,13 @@ public class TaskController {
     List<Task> tasks = dateService.getAllTasksByAssignedDate(userId, today);
     return ResponseEntity.ok(tasks);
     }
+
+
+  @PostMapping( "/{task-id}/toggle-completed" )
+  public ResponseEntity<Task> toggleCompleted( @JwtSubject String userId,
+                                               @PathVariable( "task-id" ) String taskId ) {
+
+    Task task = taskService.toggleCompleted(userId, taskId);
+    return ResponseEntity.ok(task);
+  }
 }
