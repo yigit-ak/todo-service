@@ -1,17 +1,22 @@
 package net.yigitak.todoapp.mappers;
 
+
 import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.dto.CreateRecurrenceDto;
 import net.yigitak.todoapp.models.Recurrence;
 import net.yigitak.todoapp.repositories.RecurrenceRepository;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @RequiredArgsConstructor
 public class RecurrenceMapper {
-  private final RecurrenceRepository recurrenceRepository;
 
-  public Recurrence toEntity(CreateRecurrenceDto dto, String ownerId) {
+    private final RecurrenceRepository recurrenceRepository;
+
+
+    public Recurrence toEntity(CreateRecurrenceDto dto, String ownerId) {
+
     Recurrence recurrence = new Recurrence();
 
     recurrence.setOwnerId(ownerId);
@@ -22,4 +27,5 @@ public class RecurrenceMapper {
 
     return recurrence;
   }
+
 }

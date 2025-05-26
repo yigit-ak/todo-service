@@ -1,8 +1,7 @@
 package net.yigitak.todoapp.controllers;
 
+
 import jakarta.validation.Valid;
-import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.annotations.JwtSubject;
 import net.yigitak.todoapp.dto.CreateRecurrenceDto;
@@ -12,6 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
+import java.util.List;
+
+
 @RestController
 @RequestMapping("api/v1/recurrences")
 @RequiredArgsConstructor
@@ -19,13 +22,15 @@ public class RecurrenceController {
 
   private final RecurrenceService recurrenceService;
 
+
   @GetMapping
   public ResponseEntity<List<Recurrence>> getAllRecurrences(
-      @JwtSubject String userId) {
+          @JwtSubject String userId) {
 
     List<Recurrence> recurrences = recurrenceService.getAllRecurrencesByOwnerId(userId);
     return ResponseEntity.ok(recurrences);
   }
+
 
   @PostMapping
   public ResponseEntity<Recurrence> createRecurrence(
@@ -40,7 +45,8 @@ public class RecurrenceController {
     return ResponseEntity.created(location).build();
   }
 
-  @GetMapping("/{recurrence-id}")
+
+    @GetMapping("/{recurrence-id}")
   public ResponseEntity<Recurrence> getRecurrenceById(
       @JwtSubject String userId,
       @PathVariable("recurrence-id") String recurrenceId) {
@@ -49,7 +55,8 @@ public class RecurrenceController {
     return ResponseEntity.ok(recurrence);
   }
 
-  @DeleteMapping("/{recurrence-id}")
+
+    @DeleteMapping("/{recurrence-id}")
   public ResponseEntity<Void> deleteRecurrenceById(
       @JwtSubject String userId,
       @PathVariable("recurrence-id") String recurrenceId) {

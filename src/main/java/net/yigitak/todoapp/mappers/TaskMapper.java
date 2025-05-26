@@ -1,18 +1,22 @@
 package net.yigitak.todoapp.mappers;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.springframework.stereotype.Component;
+
 import net.yigitak.todoapp.dto.CreateSubtaskDto;
 import net.yigitak.todoapp.dto.CreateTaskDto;
 import net.yigitak.todoapp.models.Subtask;
 import net.yigitak.todoapp.models.Task;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Component
 public class TaskMapper {
 
-  public Task toEntity(CreateTaskDto dto, String ownerId) {
+    public Task toEntity(CreateTaskDto dto, String ownerId) {
+
     Task task = new Task();
     task.setOwnerId(ownerId);
     task.setTitle(dto.title());
@@ -32,11 +36,14 @@ public class TaskMapper {
     return task;
   }
 
-  public Subtask toEntity(CreateSubtaskDto dto) {
+
+    public Subtask toEntity(CreateSubtaskDto dto) {
+
     Subtask subtask = new Subtask();
     subtask.setTitle(dto.title());
     // Unwrap optional description, defaulting to null if absent
     subtask.setDescription(dto.description().orElse(null));
     return subtask;
   }
+
 }

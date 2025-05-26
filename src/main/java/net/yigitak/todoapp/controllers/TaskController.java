@@ -17,6 +17,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
@@ -25,15 +26,18 @@ public class TaskController {
   private final TaskService taskService;
   private final DateService dateService;
 
+
   @GetMapping
   public ResponseEntity<List<Task>> getAllTasks(@JwtSubject String userId) {
+
     List<Task> tasks = taskService.getAllTasksByOwnerId(userId);
     return ResponseEntity.ok(tasks);
   }
 
+
   @PostMapping
   public ResponseEntity<Task> createTask(
-           @JwtSubject String userId,
+          @JwtSubject String userId,
           @RequestBody CreateTaskDto dto) {
 
     Task newTask = taskService.createTask(dto, userId);
@@ -45,17 +49,19 @@ public class TaskController {
     return ResponseEntity.created(location).build();
   }
 
+
   @GetMapping("/{task-id}")
   public ResponseEntity<Task> getTaskById(
-      @JwtSubject String userId, @PathVariable("task-id") String taskId) {
+          @JwtSubject String userId, @PathVariable("task-id") String taskId) {
 
     Task task = taskService.getTaskByIdAndOwnerId(taskId, userId);
     return ResponseEntity.ok(task);
   }
 
+
   @DeleteMapping("/{task-id}")
   public ResponseEntity<Task> deleteTaskById(
-      @JwtSubject String userId, @PathVariable("task-id") String taskId) {
+          @JwtSubject String userId, @PathVariable("task-id") String taskId) {
 
     taskService.deleteTaskByIdAndOwnerId(taskId, userId);
     return ResponseEntity.noContent().build();
@@ -70,6 +76,7 @@ public class TaskController {
   //    Task task = taskService.updateTaskByIdAndOwnerId(taskId, dto, userId);
   //    return ResponseEntity.ok(task);
   //  }
+
 
   @PostMapping("/{task-id}/subtasks")
   public ResponseEntity<Task> addSubtaskToTask(
@@ -97,6 +104,7 @@ public class TaskController {
   // user));
   //    } TODO: review the code
 
+
   @DeleteMapping("/{task-id}/subtasks/{subtask-id}")
   public ResponseEntity<Task> deleteSubtask(
       @JwtSubject String userId,
@@ -107,6 +115,7 @@ public class TaskController {
     return ResponseEntity.noContent().build();
   }
 
+
   @GetMapping("/date")
   public ResponseEntity<List<Task>> getAllTasksAssignedOn(
       @JwtSubject String userId,
@@ -116,12 +125,14 @@ public class TaskController {
     return ResponseEntity.ok(tasks);
   }
 
-    @GetMapping("/today")
-    public ResponseEntity<List<Task>> getAllTasksAssignedToday(@JwtSubject String userId) {
+
+  @GetMapping("/today")
+  public ResponseEntity<List<Task>> getAllTasksAssignedToday(@JwtSubject String userId) {
+
     LocalDate today = LocalDate.now();
     List<Task> tasks = dateService.getAllTasksByAssignedDate(userId, today);
     return ResponseEntity.ok(tasks);
-    }
+  }
 
 
   @PostMapping( "/{task-id}/toggle-completed" )
@@ -131,4 +142,5 @@ public class TaskController {
     Task task = taskService.toggleCompleted(userId, taskId);
     return ResponseEntity.ok(task);
   }
+
 }
