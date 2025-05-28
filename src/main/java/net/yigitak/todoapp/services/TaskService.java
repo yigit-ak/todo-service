@@ -106,4 +106,18 @@ public class TaskService {
     return taskRepository.save(task);
   }
 
+  public Subtask toggleSubtaskCompleted(String userId, String taskId, String subtaskId) {
+
+    Task task = getTaskByIdAndOwnerId(taskId, userId);
+
+    Subtask subtask = task.getSubtasks().stream()
+            .filter(s -> s.getId().equals(subtaskId))
+            .findFirst()
+            .orElseThrow(() -> new EntityNotFoundException("Subtask not found"));
+
+    subtask.setCompleted(!subtask.isCompleted());
+    taskRepository.save(task);
+
+    return subtask;
+  }
 }

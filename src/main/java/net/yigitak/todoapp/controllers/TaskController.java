@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.annotations.JwtSubject;
 import net.yigitak.todoapp.dto.CreateSubtaskDto;
 import net.yigitak.todoapp.dto.CreateTaskDto;
+import net.yigitak.todoapp.models.Subtask;
 import net.yigitak.todoapp.models.Task;
 import net.yigitak.todoapp.services.DateService;
 import net.yigitak.todoapp.services.TaskService;
@@ -136,11 +137,21 @@ public class TaskController {
 
 
   @PostMapping( "/{task-id}/toggle-completed" )
-  public ResponseEntity<Task> toggleCompleted( @JwtSubject String userId,
+  public ResponseEntity<Task> toggleTaskCompleted(@JwtSubject String userId,
                                                @PathVariable( "task-id" ) String taskId ) {
 
     Task task = taskService.toggleCompleted(userId, taskId);
     return ResponseEntity.ok(task);
   }
+
+
+    @PostMapping("/{task-id}/subtasks/{subtask-id}/toggle-completed")
+    public ResponseEntity<Subtask> toggleSubtaskCompleted(@JwtSubject String userId,
+                                                          @PathVariable("task-id") String taskId,
+                                                          @PathVariable("subtask-id") String subtaskId) {
+
+        Subtask subtask = taskService.toggleSubtaskCompleted(userId, taskId, subtaskId);
+        return ResponseEntity.ok(subtask);
+    }
 
 }
