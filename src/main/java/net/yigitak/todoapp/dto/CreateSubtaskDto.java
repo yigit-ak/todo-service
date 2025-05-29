@@ -7,12 +7,11 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Optional;
 
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public record CreateSubtaskDto(
 
-        @NotBlank(message = "Task title cannot be blank.")
-    String title,
+    @NotBlank( message = "Task title cannot be blank." ) String title ,
 
-    Optional<String> description
+    Optional< String > description
 
-) {}
+) { }

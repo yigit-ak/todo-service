@@ -1,26 +1,27 @@
 package net.yigitak.todoapp.repositories;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+
 import net.yigitak.todoapp.models.Recurrence;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-public interface RecurrenceRepository extends MongoRepository<Recurrence, String> {
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
-  @Query(
-      "{ '$and': [ "
-          + "{ 'owner': ?0 } "
-          + "{ 'endDate': { '$gte': ?1 } }, "
-          + "{ 'lastOccurrence': { '$lt': ?1 } }, "
-          + "] }")
-  List<Recurrence> findAllByOwnerIdBetweenLastOccurrenceAndEndDateFor(
-      String ownerId, LocalDate date);
 
-  List<Recurrence> findAllByOwnerId(String ownerId);
+public interface RecurrenceRepository
+    extends MongoRepository< Recurrence, String > {
 
-  Optional<Recurrence> findByIdAndOwnerId(String recurrenceId, String ownerId);
+  @Query( "{ '$and': [ " + "{ 'owner': ?0 } " + "{ 'endDate': { '$gte': ?1 } }, " +
+          "{ 'lastOccurrence': { '$lt': ?1 } }, " + "] }" )
+  List< Recurrence > findAllByOwnerIdBetweenLastOccurrenceAndEndDateFor (
+      String ownerId , LocalDate date );
 
-  void deleteByIdAndOwnerId(String recurrenceId, String ownerId);
+  List< Recurrence > findAllByOwnerId ( String ownerId );
+
+  Optional< Recurrence > findByIdAndOwnerId ( String recurrenceId , String ownerId );
+
+  void deleteByIdAndOwnerId ( String recurrenceId , String ownerId );
+
 }

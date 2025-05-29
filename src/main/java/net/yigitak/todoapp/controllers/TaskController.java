@@ -20,51 +20,57 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/tasks")
+@RequestMapping( "/api/v1/tasks" )
 @RequiredArgsConstructor
 public class TaskController {
 
   private final TaskService taskService;
+
   private final DateService dateService;
 
 
   @GetMapping
-  public ResponseEntity<List<Task>> getAllTasks(@JwtSubject String userId) {
+  public ResponseEntity< List< Task > > getAllTasks ( @JwtSubject String userId ) {
 
-    List<Task> tasks = taskService.getAllTasksByOwnerId(userId);
-    return ResponseEntity.ok(tasks);
+    List< Task > tasks = taskService.getAllTasksByOwnerId( userId );
+    return ResponseEntity.ok( tasks );
   }
 
 
   @PostMapping
-  public ResponseEntity<Task> createTask(
-          @JwtSubject String userId,
-          @RequestBody CreateTaskDto dto) {
+  public ResponseEntity< Task > createTask (
+      @JwtSubject String userId ,
+      @RequestBody CreateTaskDto dto
+  ) {
 
-    Task newTask = taskService.createTask(dto, userId);
-    URI location =
-        ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(newTask.getId())
-            .toUri();
-    return ResponseEntity.created(location).build();
+    Task newTask = taskService.createTask( dto , userId );
+    URI location = ServletUriComponentsBuilder
+        .fromCurrentRequest()
+        .path( "/{id}" )
+        .buildAndExpand( newTask.getId() )
+        .toUri();
+    return ResponseEntity.created( location ).build();
   }
 
 
-  @GetMapping("/{task-id}")
-  public ResponseEntity<Task> getTaskById(
-          @JwtSubject String userId, @PathVariable("task-id") String taskId) {
+  @GetMapping( "/{task-id}" )
+  public ResponseEntity< Task > getTaskById (
+      @JwtSubject String userId ,
+      @PathVariable( "task-id" ) String taskId
+  ) {
 
-    Task task = taskService.getTaskByIdAndOwnerId(taskId, userId);
-    return ResponseEntity.ok(task);
+    Task task = taskService.getTaskByIdAndOwnerId( taskId , userId );
+    return ResponseEntity.ok( task );
   }
 
 
-  @DeleteMapping("/{task-id}")
-  public ResponseEntity<Task> deleteTaskById(
-          @JwtSubject String userId, @PathVariable("task-id") String taskId) {
+  @DeleteMapping( "/{task-id}" )
+  public ResponseEntity< Task > deleteTaskById (
+      @JwtSubject String userId ,
+      @PathVariable( "task-id" ) String taskId
+  ) {
 
-    taskService.deleteTaskByIdAndOwnerId(taskId, userId);
+    taskService.deleteTaskByIdAndOwnerId( taskId , userId );
     return ResponseEntity.noContent().build();
   }
 
@@ -79,19 +85,19 @@ public class TaskController {
   //  }
 
 
-  @PostMapping("/{task-id}/subtasks")
-  public ResponseEntity<Task> addSubtaskToTask(
-      @JwtSubject String userId,
-      @PathVariable("task-id") String parentTaskId,
-      @RequestBody CreateSubtaskDto dto) {
+  @PostMapping( "/{task-id}/subtasks" )
+  public ResponseEntity< Task > addSubtaskToTask (
+      @JwtSubject String userId , @PathVariable( "task-id" ) String parentTaskId ,
+      @RequestBody CreateSubtaskDto dto
+  ) {
 
-    taskService.addSubtaskToTaskByOwnerId(parentTaskId, dto, userId);
-    URI location =
-        ServletUriComponentsBuilder.fromCurrentRequest()
-            .replacePath("/tasks/{task-id}")
-            .buildAndExpand(parentTaskId)
-            .toUri();
-    return ResponseEntity.created(location).build();
+    taskService.addSubtaskToTaskByOwnerId( parentTaskId , dto , userId );
+    URI location = ServletUriComponentsBuilder
+        .fromCurrentRequest()
+        .replacePath( "/tasks/{task-id}" )
+        .buildAndExpand( parentTaskId )
+        .toUri();
+    return ResponseEntity.created( location ).build();
   }
 
   //    @PatchMapping("/{task-id}/subtasks/{subtask-id}")
@@ -106,52 +112,56 @@ public class TaskController {
   //    } TODO: review the code
 
 
-  @DeleteMapping("/{task-id}/subtasks/{subtask-id}")
-  public ResponseEntity<Task> deleteSubtask(
-      @JwtSubject String userId,
-      @PathVariable("task-id") String parentTaskId,
-      @PathVariable("subtask-id") String subtaskId) {
+  @DeleteMapping( "/{task-id}/subtasks/{subtask-id}" )
+  public ResponseEntity< Task > deleteSubtask (
+      @JwtSubject String userId , @PathVariable( "task-id" ) String parentTaskId ,
+      @PathVariable( "subtask-id" ) String subtaskId
+  ) {
 
-    taskService.deleteSubtaskByParentTaskIdAndOwnerId(parentTaskId, subtaskId, userId);
+    taskService.deleteSubtaskByParentTaskIdAndOwnerId( parentTaskId , subtaskId , userId );
     return ResponseEntity.noContent().build();
   }
 
 
-  @GetMapping("/date")
-  public ResponseEntity<List<Task>> getAllTasksAssignedOn(
-      @JwtSubject String userId,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+  @GetMapping( "/date" )
+  public ResponseEntity< List< Task > > getAllTasksAssignedOn (
+      @JwtSubject String userId ,
+      @RequestParam @DateTimeFormat( iso = DateTimeFormat.ISO.DATE ) LocalDate date
+  ) {
 
-    List<Task> tasks = dateService.getAllTasksByAssignedDate(userId, date);
-    return ResponseEntity.ok(tasks);
+    List< Task > tasks = dateService.getAllTasksByAssignedDate( userId , date );
+    return ResponseEntity.ok( tasks );
   }
 
 
-  @GetMapping("/today")
-  public ResponseEntity<List<Task>> getAllTasksAssignedToday(@JwtSubject String userId) {
+  @GetMapping( "/today" )
+  public ResponseEntity< List< Task > > getAllTasksAssignedToday ( @JwtSubject String userId ) {
 
-    LocalDate today = LocalDate.now();
-    List<Task> tasks = dateService.getAllTasksByAssignedDate(userId, today);
-    return ResponseEntity.ok(tasks);
+    LocalDate today    = LocalDate.now();
+    List< Task > tasks = dateService.getAllTasksByAssignedDate( userId , today );
+    return ResponseEntity.ok( tasks );
   }
 
 
   @PostMapping( "/{task-id}/toggle-completed" )
-  public ResponseEntity<Task> toggleTaskCompleted(@JwtSubject String userId,
-                                               @PathVariable( "task-id" ) String taskId ) {
+  public ResponseEntity< Task > toggleTaskCompleted (
+      @JwtSubject String userId ,
+      @PathVariable( "task-id" ) String taskId
+  ) {
 
-    Task task = taskService.toggleCompleted(userId, taskId);
-    return ResponseEntity.ok(task);
+    Task task = taskService.toggleCompleted( userId , taskId );
+    return ResponseEntity.ok( task );
   }
 
 
-    @PostMapping("/{task-id}/subtasks/{subtask-id}/toggle-completed")
-    public ResponseEntity<Subtask> toggleSubtaskCompleted(@JwtSubject String userId,
-                                                          @PathVariable("task-id") String taskId,
-                                                          @PathVariable("subtask-id") String subtaskId) {
+  @PostMapping( "/{task-id}/subtasks/{subtask-id}/toggle-completed" )
+  public ResponseEntity< Subtask > toggleSubtaskCompleted (
+      @JwtSubject String userId , @PathVariable( "task-id" ) String taskId ,
+      @PathVariable( "subtask-id" ) String subtaskId
+  ) {
 
-        Subtask subtask = taskService.toggleSubtaskCompleted(userId, taskId, subtaskId);
-        return ResponseEntity.ok(subtask);
-    }
+    Subtask subtask = taskService.toggleSubtaskCompleted( userId , taskId , subtaskId );
+    return ResponseEntity.ok( subtask );
+  }
 
 }

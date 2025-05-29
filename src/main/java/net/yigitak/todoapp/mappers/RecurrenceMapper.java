@@ -12,18 +12,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RecurrenceMapper {
 
-    private final RecurrenceRepository recurrenceRepository;
+  private final RecurrenceRepository recurrenceRepository;
 
 
-    public Recurrence toEntity(CreateRecurrenceDto dto, String ownerId) {
+  public Recurrence toEntity ( CreateRecurrenceDto dto , String ownerId ) {
 
     Recurrence recurrence = new Recurrence();
 
-    recurrence.setOwnerId(ownerId);
-    recurrence.setTaskTemplate(dto.taskTemplate());
-    recurrence.setStartDate(dto.startDate());
-    recurrence.setEndDate(dto.endDate());
-    recurrence.setPeriod(dto.period());
+    recurrence.setOwnerId( ownerId );
+    recurrence.setTaskTemplate( dto.taskTemplate() );
+    recurrence.setStartDate( dto.startDate() );
+    recurrence.setEndDate( dto.endDate() );
+    recurrence.setPeriod( dto.period() );
 
     return recurrence;
   }

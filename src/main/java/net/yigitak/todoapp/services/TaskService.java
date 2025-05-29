@@ -22,31 +22,41 @@ public class TaskService {
   private final TaskRepository taskRepository;
   private final TaskMapper taskMapper;
 
-  public List<Task> getAllTasksByOwnerId(String ownerId) {
-    return taskRepository.findAllByOwnerId(ownerId);
+
+  public List < Task > getAllTasksByOwnerId ( String ownerId ) {
+
+    return taskRepository.findAllByOwnerId( ownerId );
   }
 
-  public Task createTask(CreateTaskDto dto, String ownerId) {
-    Task task = taskMapper.toEntity(dto, ownerId);
-    return taskRepository.save(task);
+
+  public Task createTask ( CreateTaskDto dto , String ownerId ) {
+
+    Task task = taskMapper.toEntity( dto , ownerId );
+    return taskRepository.save( task );
   }
 
-  public Task getTaskByIdAndOwnerId(String id, String ownerId) {
+
+  public Task getTaskByIdAndOwnerId ( String id , String ownerId ) {
+
     return taskRepository
-        .findByIdAndOwnerId(id, ownerId)
-        .orElseThrow(() -> new EntityNotFoundException("Task not found."));
+        .findByIdAndOwnerId( id , ownerId )
+        .orElseThrow( ( ) -> new EntityNotFoundException( "Task not found." ) );
   }
 
-  public void deleteTaskByIdAndOwnerId(String taskId, String ownerId) {
-    Task taskToDelete = getTaskByIdAndOwnerId(taskId, ownerId);
-    taskRepository.delete(taskToDelete);
+
+  public void deleteTaskByIdAndOwnerId ( String taskId , String ownerId ) {
+
+    Task taskToDelete = getTaskByIdAndOwnerId( taskId , ownerId );
+    taskRepository.delete( taskToDelete );
   }
 
-  public Task addSubtaskToTaskByOwnerId(String taskId, CreateSubtaskDto dto, String ownerId) {
-    Task parentTask = getTaskByIdAndOwnerId(taskId, ownerId);
-    Subtask subtask = taskMapper.toEntity(dto);
-    parentTask.getSubtasks().add(subtask);
-    return taskRepository.save(parentTask);
+
+  public Task addSubtaskToTaskByOwnerId ( String taskId , CreateSubtaskDto dto , String ownerId ) {
+
+    Task parentTask = getTaskByIdAndOwnerId( taskId , ownerId );
+    Subtask subtask = taskMapper.toEntity( dto );
+    parentTask.getSubtasks().add( subtask );
+    return taskRepository.save( parentTask );
   }
 
   //  public Task updateTaskByIdAndOwnerId(String taskId, Map<String, Object> updateRequest, String
@@ -73,50 +83,57 @@ public class TaskService {
   //    return taskRepository.save(taskToUpdate);
   //  }
 
-  public void deleteSubtaskByParentTaskIdAndOwnerId(
-      String taskId, String subtaskId, String ownerId) {
 
-    Task parentTask = getTaskByIdAndOwnerId(taskId, ownerId);
-    parentTask.getSubtasks().removeIf(subtask -> subtask.getId().equals(subtaskId));
-    taskRepository.save(parentTask);
+  public void deleteSubtaskByParentTaskIdAndOwnerId (
+      String taskId , String subtaskId , String ownerId ) {
+
+    Task parentTask = getTaskByIdAndOwnerId( taskId , ownerId );
+    parentTask.getSubtasks().removeIf( subtask -> subtask.getId().equals( subtaskId ) );
+    taskRepository.save( parentTask );
   }
 
-  public void deleteAllRecurrentTasksStartingFromToday(Recurrence recurrence, String ownerId) {
+
+  public void deleteAllRecurrentTasksStartingFromToday ( Recurrence recurrence , String ownerId ) {
+
     LocalDate today = LocalDate.now();
-    taskRepository.deleteAllByRecurrenceStartingFrom(recurrence, today, ownerId);
+    taskRepository.deleteAllByRecurrenceStartingFrom( recurrence , today , ownerId );
   }
 
-  public void deleteAllRecurrentTasksStartingFrom(
-      Recurrence recurrence, LocalDate date, String ownerId) {
 
-    taskRepository.deleteAllByRecurrenceStartingFrom(recurrence, date, ownerId);
+  public void deleteAllRecurrentTasksStartingFrom (
+      Recurrence recurrence , LocalDate date , String ownerId ) {
+
+    taskRepository.deleteAllByRecurrenceStartingFrom( recurrence , date , ownerId );
   }
 
-  public Task getLastCreatedRecurrentTask(Recurrence recurrence, String ownerId) {
+
+  public Task getLastCreatedRecurrentTask ( Recurrence recurrence , String ownerId ) {
+
     return taskRepository
-        .findLastCreatedRecurrentTask(recurrence, ownerId)
-        .orElseThrow(() -> new EntityNotFoundException("No recurrent task found."));
+        .findLastCreatedRecurrentTask( recurrence , ownerId )
+        .orElseThrow( ( ) -> new EntityNotFoundException( "No recurrent task found." ) );
   }
 
 
-  public Task toggleCompleted( String userId, String taskId ) {
+  public Task toggleCompleted ( String userId , String taskId ) {
 
-    Task task = getTaskByIdAndOwnerId(taskId, userId);
-    task.setCompleted(!task.getCompleted());
-    return taskRepository.save(task);
+    Task task = getTaskByIdAndOwnerId( taskId , userId );
+    task.setCompleted( !task.getCompleted() );
+    return taskRepository.save( task );
   }
 
-  public Subtask toggleSubtaskCompleted(String userId, String taskId, String subtaskId) {
 
-    Task task = getTaskByIdAndOwnerId(taskId, userId);
+  public Subtask toggleSubtaskCompleted ( String userId , String taskId , String subtaskId ) {
+
+    Task task = getTaskByIdAndOwnerId( taskId , userId );
 
     Subtask subtask = task.getSubtasks().stream()
-            .filter(s -> s.getId().equals(subtaskId))
-            .findFirst()
-            .orElseThrow(() -> new EntityNotFoundException("Subtask not found"));
+        .filter( s -> s.getId().equals( subtaskId ) )
+        .findFirst()
+        .orElseThrow( ( ) -> new EntityNotFoundException( "Subtask not found" ) );
 
-    subtask.setCompleted(!subtask.isCompleted());
-    taskRepository.save(task);
+    subtask.setCompleted( !subtask.isCompleted() );
+    taskRepository.save( task );
 
     return subtask;
   }

@@ -10,16 +10,11 @@ import java.time.LocalDate;
 
 
 public record CreateRecurrenceDto(
-        @Valid
-        RecurrentTaskTemplate taskTemplate,
+    @Valid RecurrentTaskTemplate taskTemplate ,
 
-        @FutureOrPresent(message = "Starting date cannot be in the past.")
-        LocalDate startDate,
+    @FutureOrPresent( message = "Starting date cannot be in the past." ) LocalDate startDate ,
 
-        @FutureOrPresent(message = "Ending date cannot be in the past.")
-        LocalDate endDate,
+    @FutureOrPresent( message = "Ending date cannot be in the past." ) LocalDate endDate ,
 
-        @Positive(message = "Task period must be a positive integer.")
-        int period
-) {
-}
+    @Positive( message = "Task period must be a positive integer." ) int period
+) { }

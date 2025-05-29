@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("api/v1/recurrences")
+@RequestMapping( "api/v1/recurrences" )
 @RequiredArgsConstructor
 public class RecurrenceController {
 
@@ -24,44 +24,49 @@ public class RecurrenceController {
 
 
   @GetMapping
-  public ResponseEntity<List<Recurrence>> getAllRecurrences(
-          @JwtSubject String userId) {
+  public ResponseEntity< List< Recurrence > > getAllRecurrences (
+      @JwtSubject String userId
+  ) {
 
-    List<Recurrence> recurrences = recurrenceService.getAllRecurrencesByOwnerId(userId);
-    return ResponseEntity.ok(recurrences);
+    List< Recurrence > recurrences = recurrenceService.getAllRecurrencesByOwnerId( userId );
+    return ResponseEntity.ok( recurrences );
   }
 
 
   @PostMapping
-  public ResponseEntity<Recurrence> createRecurrence(
-          @JwtSubject String userId, @RequestBody @Valid CreateRecurrenceDto dto) {
+  public ResponseEntity< Recurrence > createRecurrence (
+      @JwtSubject String userId ,
+      @RequestBody @Valid CreateRecurrenceDto dto
+  ) {
 
-    Recurrence newRecurrence = recurrenceService.createRecurrence(dto, userId);
-    URI location =
-        ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(newRecurrence.getId())
-            .toUri();
-    return ResponseEntity.created(location).build();
+    Recurrence newRecurrence = recurrenceService.createRecurrence( dto , userId );
+    URI location = ServletUriComponentsBuilder
+        .fromCurrentRequest()
+        .path( "/{id}" )
+        .buildAndExpand( newRecurrence.getId() )
+        .toUri();
+    return ResponseEntity.created( location ).build();
   }
 
 
-    @GetMapping("/{recurrence-id}")
-  public ResponseEntity<Recurrence> getRecurrenceById(
-      @JwtSubject String userId,
-      @PathVariable("recurrence-id") String recurrenceId) {
+  @GetMapping( "/{recurrence-id}" )
+  public ResponseEntity< Recurrence > getRecurrenceById (
+      @JwtSubject String userId ,
+      @PathVariable( "recurrence-id" ) String recurrenceId
+  ) {
 
-    Recurrence recurrence = recurrenceService.getRecurrenceByIdAndOwnerId(recurrenceId, userId);
-    return ResponseEntity.ok(recurrence);
+    Recurrence recurrence = recurrenceService.getRecurrenceByIdAndOwnerId( recurrenceId , userId );
+    return ResponseEntity.ok( recurrence );
   }
 
 
-    @DeleteMapping("/{recurrence-id}")
-  public ResponseEntity<Void> deleteRecurrenceById(
-      @JwtSubject String userId,
-      @PathVariable("recurrence-id") String recurrenceId) {
+  @DeleteMapping( "/{recurrence-id}" )
+  public ResponseEntity< Void > deleteRecurrenceById (
+      @JwtSubject String userId ,
+      @PathVariable( "recurrence-id" ) String recurrenceId
+  ) {
 
-    recurrenceService.deleteRecurrenceByIdAndOwnerId(recurrenceId, userId);
+    recurrenceService.deleteRecurrenceByIdAndOwnerId( recurrenceId , userId );
     return ResponseEntity.noContent().build();
   }
 

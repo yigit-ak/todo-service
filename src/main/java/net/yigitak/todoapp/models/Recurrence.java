@@ -1,8 +1,5 @@
 package net.yigitak.todoapp.models;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Set;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,17 +12,24 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-@Setter @Getter @NoArgsConstructor
-@EqualsAndHashCode(exclude = "tasks")
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
 
-@Document("recurrences")
+
+@Setter
+@Getter
+@NoArgsConstructor
+@EqualsAndHashCode( exclude = "tasks" )
+
+@Document( "recurrences" )
 public class Recurrence {
 
   @Id
   private String id;
 
-  @DocumentReference(lazy = true)
-  private Set<Task> tasks;
+  @DocumentReference( lazy = true )
+  private Set< Task > tasks;
 
   @Indexed
   private String ownerId;
@@ -45,10 +49,14 @@ public class Recurrence {
   private LocalDate endDate;
   private LocalDate lastOccurrence;
 
-  /** e.g. “every 7 days” → period = 7 */
+  /**
+   * e.g. “every 7 days” → period = 7
+   */
   private int period;
 
-  public boolean isForever() {
+
+  public boolean isForever ( ) {
     return getEndDate() == null;
   }
+
 }

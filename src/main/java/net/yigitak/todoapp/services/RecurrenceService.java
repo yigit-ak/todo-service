@@ -1,6 +1,6 @@
 package net.yigitak.todoapp.services;
 
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.dto.CreateRecurrenceDto;
 import net.yigitak.todoapp.exceptions.EntityNotFoundException;
@@ -9,6 +9,9 @@ import net.yigitak.todoapp.models.Recurrence;
 import net.yigitak.todoapp.repositories.RecurrenceRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+
 @Service
 @RequiredArgsConstructor
 public class RecurrenceService {
@@ -16,26 +19,28 @@ public class RecurrenceService {
   private final RecurrenceRepository recurrenceRepository;
   private final RecurrenceMapper recurrenceMapper;
 
-  public List<Recurrence> getAllRecurrencesByOwnerId(String ownerId) {
-    return recurrenceRepository.findAllByOwnerId(ownerId);
+
+  public List< Recurrence > getAllRecurrencesByOwnerId ( String ownerId ) {
+    return recurrenceRepository.findAllByOwnerId( ownerId );
   }
 
-  public Recurrence createRecurrence(CreateRecurrenceDto dto, String ownerId) {
-    Recurrence recurrence = recurrenceMapper.toEntity(dto, ownerId);
-    return recurrenceRepository.save(recurrence);
+
+  public Recurrence createRecurrence ( CreateRecurrenceDto dto , String ownerId ) {
+    Recurrence recurrence = recurrenceMapper.toEntity( dto , ownerId );
+    return recurrenceRepository.save( recurrence );
   }
 
-  public Recurrence getRecurrenceByIdAndOwnerId(String recurrenceId, String ownerId) {
+
+  public Recurrence getRecurrenceByIdAndOwnerId ( String recurrenceId , String ownerId ) {
     return recurrenceRepository
-        .findByIdAndOwnerId(recurrenceId, ownerId)
-        .orElseThrow(
-            () ->
-                new EntityNotFoundException(
-                    "Recurrence with the ID %s not found.".formatted(recurrenceId)));
+        .findByIdAndOwnerId( recurrenceId , ownerId )
+        .orElseThrow( ( ) -> new EntityNotFoundException(
+            "Recurrence with the ID %s not found.".formatted( recurrenceId ) ) );
   }
 
-  public void deleteRecurrenceByIdAndOwnerId(String recurrenceId, String ownerId) {
-    recurrenceRepository.deleteByIdAndOwnerId(recurrenceId, ownerId);
+
+  public void deleteRecurrenceByIdAndOwnerId ( String recurrenceId , String ownerId ) {
+    recurrenceRepository.deleteByIdAndOwnerId( recurrenceId , ownerId );
   }
 
   //  public Recurrence updateRecurrenceByIdAndOwner(

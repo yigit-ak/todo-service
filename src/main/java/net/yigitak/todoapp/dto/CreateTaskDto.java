@@ -11,21 +11,17 @@ import java.util.List;
 import java.util.Optional;
 
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public record CreateTaskDto(
 
-        @NotBlank(message = "Task title cannot be blank.")
-    String title,
+    @NotBlank( message = "Task title cannot be blank." ) String title ,
 
-    @Valid
-    Optional<List<CreateSubtaskDto>> subtasks,
+    @Valid Optional< List< CreateSubtaskDto > > subtasks ,
 
-        @FutureOrPresent(message = "Task cannot be assigned on a date in the past.")
-    Optional<LocalDate> dateAssigned,
+    @FutureOrPresent( message = "Task cannot be assigned on a date in the past." ) Optional< LocalDate > dateAssigned ,
 
-        @FutureOrPresent(message = "Due date cannot be in the past.")
-    Optional<LocalDate> dateDue,
+    @FutureOrPresent( message = "Due date cannot be in the past." ) Optional< LocalDate > dateDue ,
 
-    Optional<String> description
+    Optional< String > description
 
-) {}
+) { }
