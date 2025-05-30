@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -23,7 +24,7 @@ public class TaskService {
   private final TaskMapper taskMapper;
 
 
-  public List < Task > getAllTasksByOwnerId ( String ownerId ) {
+  public List< Task > getAllTasksByOwnerId ( String ownerId ) {
 
     return taskRepository.findAllByOwnerId( ownerId );
   }
@@ -137,4 +138,5 @@ public class TaskService {
 
     return subtask;
   }
+
 }
