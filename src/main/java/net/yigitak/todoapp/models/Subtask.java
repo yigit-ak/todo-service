@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @NoArgsConstructor
-@EqualsAndHashCode( onlyExplicitlyIncluded = true )
+@EqualsAndHashCode( onlyExplicitlyIncluded = true, of = { "id" } )
+
 public class Subtask {
 
   @EqualsAndHashCode.Include

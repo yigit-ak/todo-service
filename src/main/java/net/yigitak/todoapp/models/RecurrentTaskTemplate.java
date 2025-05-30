@@ -2,7 +2,7 @@ package net.yigitak.todoapp.models;
 
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class RecurrentTaskTemplate {
 
-  @NotBlank( message = "Task title cannot be blank." )
+  @NotEmpty( message = "Task title cannot be empty." )
   String title;
 
   @Valid

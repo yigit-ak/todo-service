@@ -8,13 +8,11 @@ import net.yigitak.todoapp.dto.UpdateSubtaskDto;
 import net.yigitak.todoapp.dto.UpdateTaskDto;
 import net.yigitak.todoapp.exceptions.EntityNotFoundException;
 import net.yigitak.todoapp.mappers.TaskMapper;
-import net.yigitak.todoapp.models.Recurrence;
 import net.yigitak.todoapp.models.Subtask;
 import net.yigitak.todoapp.models.Task;
 import net.yigitak.todoapp.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -112,28 +110,6 @@ public class TaskService {
     Task parentTask = getTaskByIdAndOwnerId( taskId , ownerId );
     parentTask.getSubtasks().removeIf( subtask -> subtask.getId().equals( subtaskId ) );
     taskRepository.save( parentTask );
-  }
-
-
-  public void deleteAllRecurrentTasksStartingFromToday ( Recurrence recurrence , String ownerId ) {
-
-    LocalDate today = LocalDate.now();
-    taskRepository.deleteAllByRecurrenceStartingFrom( recurrence , today , ownerId );
-  }
-
-
-  public void deleteAllRecurrentTasksStartingFrom (
-      Recurrence recurrence , LocalDate date , String ownerId ) {
-
-    taskRepository.deleteAllByRecurrenceStartingFrom( recurrence , date , ownerId );
-  }
-
-
-  public Task getLastCreatedRecurrentTask ( Recurrence recurrence , String ownerId ) {
-
-    return taskRepository
-        .findLastCreatedRecurrentTask( recurrence , ownerId )
-        .orElseThrow( ( ) -> new EntityNotFoundException( "No recurrent task found." ) );
   }
 
 

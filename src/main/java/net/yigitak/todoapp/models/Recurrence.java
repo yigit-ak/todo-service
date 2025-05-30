@@ -17,7 +17,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode( exclude = "tasks" )
+@EqualsAndHashCode( of = { "id" } )
 @Builder
 @Document( "recurrences" )
 public class Recurrence {

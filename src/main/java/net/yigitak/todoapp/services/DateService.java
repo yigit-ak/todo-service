@@ -44,10 +44,9 @@ public class DateService {
 
   private void createRecurrentTasksUntil ( Recurrence recurrence , LocalDate date ) {
 
-    LocalDate lastOccurrence = recurrence.getLastOccurrence();
-    int period = recurrence.getPeriod();
-
-    List< Task > tasksToSave = new LinkedList<>();
+    LocalDate    lastOccurrence = recurrence.getLastOccurrence();
+    int          period         = recurrence.getPeriod();
+    List< Task > tasksToSave    = new LinkedList<>();
 
     LocalDate startFrom =
         lastOccurrence == null ? recurrence.getStartDate() : lastOccurrence.plusDays( period );

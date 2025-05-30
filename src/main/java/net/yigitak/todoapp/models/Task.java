@@ -19,7 +19,7 @@ import java.util.Set;
 @Setter
 @Builder
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode( of = { "id" } )
 @Document( "tasks" )
 public class Task {
 

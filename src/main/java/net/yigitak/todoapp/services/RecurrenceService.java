@@ -3,12 +3,15 @@ package net.yigitak.todoapp.services;
 
 import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.dto.CreateRecurrenceDto;
+import net.yigitak.todoapp.dto.UpdateRecurrenceDto;
 import net.yigitak.todoapp.exceptions.EntityNotFoundException;
 import net.yigitak.todoapp.mappers.RecurrenceMapper;
 import net.yigitak.todoapp.models.Recurrence;
+import net.yigitak.todoapp.models.Task;
 import net.yigitak.todoapp.repositories.RecurrenceRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -18,6 +21,7 @@ public class RecurrenceService {
 
   private final RecurrenceRepository recurrenceRepository;
   private final RecurrenceMapper recurrenceMapper;
+  private final RecurrentTaskService recurrentTaskService;
 
 
   public List< Recurrence > getAllRecurrencesByOwnerId ( String ownerId ) {
@@ -43,48 +47,56 @@ public class RecurrenceService {
     recurrenceRepository.deleteByIdAndOwnerId( recurrenceId , ownerId );
   }
 
-  //  public Recurrence updateRecurrenceByIdAndOwner(
-  //      String recurrenceId, String ownerId, Map<String, Object> dto) {
-  //
-  //    Recurrence recurrenceToUpdate = getRecurrenceByIdAndOwnerId(recurrenceId, ownerId);
-  //
-  //    if (dto.containsKey("startDate")) {
-  //      LocalDate newStartDate = LocalDate.parse((String) dto.get("startDate"));
-  //      taskService.deleteAllRecurrentTasksStartingFromToday(recurrenceToUpdate);
-  //      // when asked for the tasks on a date, all recurrent tasks will be created according to
-  //      // updated startDate.
-  //      recurrenceToUpdate.setLastOccurrence(null);
-  //      recurrenceToUpdate.setStartDate(newStartDate);
-  //    }
-  //
-  //    if (dto.containsKey("endDate")) {
-  //      LocalDate newEndDate = LocalDate.parse((String) dto.get("endDate"));
-  //      LocalDate oldEndDate = recurrenceToUpdate.getEndDate();
-  //      if (recurrenceToUpdate.isForever() || newEndDate.isBefore(oldEndDate)) {
-  //        taskService.deleteAllRecurrentTasksStartingFrom(recurrenceToUpdate, newEndDate);
-  //        Task lastCreatedTask = taskService.getLastCreatedRecurrentTask(recurrenceToUpdate);
-  //        recurrenceToUpdate.setLastOccurrence(lastCreatedTask.getDateAssigned());
-  //      }
-  //      recurrenceToUpdate.setEndDate(newEndDate);
-  //    }
-  //
-  //    if (dto.containsKey("period")) {
-  //      int newPeriod = Integer.parseInt((String) dto.get("period"));
-  //      taskService.deleteAllRecurrentTasksStartingFromToday(recurrenceToUpdate);
-  //      /* when asked for the tasks on a date, all recurrent tasks will be created according to
-  //      updated period. */
-  //      Task lastCreatedTask = taskService.getLastCreatedRecurrentTask(recurrenceToUpdate);
-  //      recurrenceToUpdate.setLastOccurrence(lastCreatedTask.getDateAssigned());
-  //      recurrenceToUpdate.setPeriod(newPeriod);
-  //    }
-  //
-  //    if (dto.containsKey("tagId")) {
-  //      String newTagId = (String) dto.get("tagId");
-  //      recurrenceToUpdate.setTag(new Tag(newTagId));
-  //    }
-  //
-  //    // TODO: if (updates.containsKey("taskTemplate"))
-  //
-  //    return recurrenceRepository.save(recurrenceToUpdate);
-  //  }
+
+  public Recurrence updateRecurrenceByIdAndOwner (
+      String recurrenceId , String ownerId , UpdateRecurrenceDto dto ) {
+
+    Recurrence recurrenceToUpdate = getRecurrenceByIdAndOwnerId( recurrenceId , ownerId );
+
+    dto.startDate().ifPresent( startDate -> {
+      recurrentTaskService.deleteAllRecurrentTasksStartingFromToday( recurrenceToUpdate , ownerId );
+
+      /* when asked for the tasks on a given date, all recurrent tasks will be created according
+      to updated startDate by DateService. */
+
+      recurrenceToUpdate.setStartDate( startDate );
+      recurrenceToUpdate.setLastOccurrence( null );
+    } );
+
+
+    dto.endDate().ifPresent( newEndDate -> {
+      LocalDate oldEndDate = recurrenceToUpdate.getEndDate();
+
+      if ( recurrenceToUpdate.isForever() || newEndDate.isBefore( oldEndDate ) ) {
+        recurrentTaskService.deleteAllRecurrentTasksStartingFrom(
+            recurrenceToUpdate , newEndDate , ownerId );
+        Task lastCreatedTask =
+            recurrentTaskService.getLastCreatedRecurrentTask( recurrenceToUpdate , ownerId );
+        recurrenceToUpdate.setLastOccurrence( lastCreatedTask.getDateAssigned() );
+      }
+
+      recurrenceToUpdate.setEndDate( newEndDate );
+    } );
+
+    dto.period().ifPresent( period -> {
+      recurrentTaskService.deleteAllRecurrentTasksStartingFromToday( recurrenceToUpdate , ownerId );
+
+      /* when asked for the tasks on a given date, all recurrent tasks will be created according
+      to updated startDate by DateService. */
+
+      Task lastCreatedTask =
+          recurrentTaskService.getLastCreatedRecurrentTask( recurrenceToUpdate , ownerId );
+      recurrenceToUpdate.setLastOccurrence( lastCreatedTask.getDateAssigned() );
+      recurrenceToUpdate.setPeriod( period );
+    } );
+
+
+    dto.taskTemplate().ifPresent( taskTemplate -> {
+      recurrentTaskService.deleteAllRecurrentTasksStartingFromToday( recurrenceToUpdate , ownerId );
+      recurrenceToUpdate.setTaskTemplate( taskTemplate );
+    } );
+
+    return recurrenceRepository.save( recurrenceToUpdate );
+  }
+
 }
