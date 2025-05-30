@@ -45,6 +45,7 @@ public class Recurrence {
   @Indexed
   private LocalDate endDate;
 
+  @Indexed
   private LocalDate lastOccurrence;
 
   /**

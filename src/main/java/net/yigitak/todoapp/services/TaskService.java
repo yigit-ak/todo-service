@@ -4,6 +4,8 @@ package net.yigitak.todoapp.services;
 import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.dto.CreateSubtaskDto;
 import net.yigitak.todoapp.dto.CreateTaskDto;
+import net.yigitak.todoapp.dto.UpdateSubtaskDto;
+import net.yigitak.todoapp.dto.UpdateTaskDto;
 import net.yigitak.todoapp.exceptions.EntityNotFoundException;
 import net.yigitak.todoapp.mappers.TaskMapper;
 import net.yigitak.todoapp.models.Recurrence;
@@ -52,37 +54,56 @@ public class TaskService {
   }
 
 
-  public Task addSubtaskToTaskByOwnerId ( String taskId , CreateSubtaskDto dto , String ownerId ) {
+  public void addSubtaskToTaskByOwnerId ( String taskId , CreateSubtaskDto dto , String ownerId ) {
 
     Task parentTask = getTaskByIdAndOwnerId( taskId , ownerId );
     Subtask subtask = taskMapper.toEntity( dto );
     parentTask.getSubtasks().add( subtask );
-    return taskRepository.save( parentTask );
+    taskRepository.save( parentTask );
   }
 
-  //  public Task updateTaskByIdAndOwnerId(String taskId, Map<String, Object> updateRequest, String
-  // ownerId) {
-  //    Task taskToUpdate = taskRepository.findByIdAndOwner(taskId, owner);
-  //
-  //    if (taskToUpdate == null)
-  //      return null; // TODO: don't return null, return 404 or something or auth error
-  //
-  //    if (updateRequest.containsKey("title"))
-  //      taskToUpdate.setTitle((String) updateRequest.get("title"));
-  //    if (updateRequest.containsKey("description"))
-  //      taskToUpdate.setDescription((String) updateRequest.get("description"));
-  //    if (updateRequest.containsKey("tagId"))
-  //      taskToUpdate.setTag(new Tag((String) updateRequest.get("tagId")));
-  //    if (updateRequest.containsKey("starred"))
-  //      taskToUpdate.setStarred((Boolean) updateRequest.get("starred"));
-  //    if (updateRequest.containsKey("dateAssigned"))
-  //      taskToUpdate.setDateAssigned(LocalDate.parse((String) updateRequest.get("dateAssigned")));
-  //    if (updateRequest.containsKey("dateDue"))
-  //      taskToUpdate.setDateDue(LocalDate.parse((String) updateRequest.get("dateDue")));
-  //    // if (updateRequest.containsKey("subtasks")) TODO: idk what to do
-  //
-  //    return taskRepository.save(taskToUpdate);
-  //  }
+
+  public void updateTaskByIdAndOwnerId ( String taskId , UpdateTaskDto dto , String ownerId ) {
+
+    Task task = taskRepository
+        .findByIdAndOwnerId( taskId , ownerId )
+        .orElseThrow( ( ) -> new EntityNotFoundException(
+            "Task with the ID %s not found.".formatted( taskId ) ) );
+
+    dto.title().ifPresent( task::setTitle );
+    dto.description().ifPresent( task::setDescription );
+    dto.completed().ifPresent( task::setCompleted );
+    dto.starred().ifPresent( task::setStarred );
+    dto.dateAssigned().ifPresent( task::setDateAssigned );
+    dto.dateDue().ifPresent( task::setDateDue );
+
+    taskRepository.save( task );
+
+  }
+
+
+  public void updateSubtaskByIdAndOwnerId (
+      String taskId , String subtaskId ,
+      UpdateSubtaskDto dto , String ownerId
+  ) {
+    Task task = taskRepository
+        .findByIdAndOwnerId( taskId , ownerId )
+        .orElseThrow( ( ) -> new EntityNotFoundException(
+            "Task with the ID %s not found.".formatted( taskId ) ) );
+
+    Subtask subtask = task
+        .getSubtasks()
+        .stream()
+        .filter( s -> s.getId().equals( subtaskId ) )
+        .findFirst()
+        .orElseThrow( ( ) -> new EntityNotFoundException(
+            "Subtask with the ID %s not found.".formatted( subtaskId ) ) );
+
+    dto.title().ifPresent( subtask::setTitle );
+    dto.description().ifPresent( subtask::setDescription );
+
+    taskRepository.save( task );
+  }
 
 
   public void deleteSubtaskByParentTaskIdAndOwnerId (

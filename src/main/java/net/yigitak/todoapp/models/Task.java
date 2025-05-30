@@ -27,6 +27,7 @@ public class Task {
   private String id;
 
   @DocumentReference
+  @Indexed
   private Recurrence recurrence;
 
   @Indexed

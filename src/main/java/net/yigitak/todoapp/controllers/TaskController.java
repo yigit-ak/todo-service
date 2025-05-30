@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import net.yigitak.todoapp.annotations.JwtSubject;
 import net.yigitak.todoapp.dto.CreateSubtaskDto;
 import net.yigitak.todoapp.dto.CreateTaskDto;
+import net.yigitak.todoapp.dto.UpdateSubtaskDto;
+import net.yigitak.todoapp.dto.UpdateTaskDto;
 import net.yigitak.todoapp.models.Subtask;
 import net.yigitak.todoapp.models.Task;
 import net.yigitak.todoapp.services.DateService;
@@ -74,15 +76,17 @@ public class TaskController {
     return ResponseEntity.noContent().build();
   }
 
-  //  @PatchMapping("/{task-id}")
-  //  public ResponseEntity<Task> updateTaskById(
-  //      @JwtSubject String userId,
-  //      @PathVariable("task-id") String taskId,
-  //      @RequestBody Map<String, Object> dto) {
-  //
-  //    Task task = taskService.updateTaskByIdAndOwnerId(taskId, dto, userId);
-  //    return ResponseEntity.ok(task);
-  //  }
+
+  @PatchMapping( "/{task-id}" )
+  public ResponseEntity< Void > updateTaskById (
+      @JwtSubject String userId ,
+      @PathVariable( "task-id" ) String taskId ,
+      UpdateTaskDto dto
+  ) {
+
+    taskService.updateTaskByIdAndOwnerId( taskId , dto , userId );
+    return ResponseEntity.ok().build();
+  }
 
 
   @PostMapping( "/{task-id}/subtasks" )
@@ -100,16 +104,16 @@ public class TaskController {
     return ResponseEntity.created( location ).build();
   }
 
-  //    @PatchMapping("/{task-id}/subtasks/{subtask-id}")
-  //    public ResponseEntity<Task> updateSubtask(@JwtSubject String
-  // userId,@PathVariable("task-id") String taskId,
-  //                                              @PathVariable("subtask-id") String subtaskId,
-  //                                              @RequestBody Subtask subtask
-  //                                              ) {
-  //        User user = userService.getUserIdByEmail(userEmail);
-  //        return ResponseEntity.ok(taskService.updateSubtaskByParentTaskIdOwnerId(taskId, subtask,
-  // user));
-  //    } TODO: review the code
+
+  @PatchMapping( "/{task-id}/subtasks/{subtask-id}" )
+  public ResponseEntity< Void > updateSubtaskByIdAndOwnerId (
+      @JwtSubject String userId , @PathVariable( "task-id" ) String taskId ,
+      @PathVariable( "subtask-id" ) String subtaskId , UpdateSubtaskDto dto
+  ) {
+
+    taskService.updateSubtaskByIdAndOwnerId( taskId , subtaskId , dto , userId );
+    return ResponseEntity.ok().build();
+  }
 
 
   @DeleteMapping( "/{task-id}/subtasks/{subtask-id}" )
