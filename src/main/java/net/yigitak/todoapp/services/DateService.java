@@ -2,6 +2,7 @@ package net.yigitak.todoapp.services;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.yigitak.todoapp.models.Recurrence;
 import net.yigitak.todoapp.models.Task;
 import net.yigitak.todoapp.repositories.RecurrenceRepository;
@@ -13,8 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-@Service
+@Slf4j
 @RequiredArgsConstructor
+@Service
 public class DateService {
 
   private final TaskRepository taskRepository;
