@@ -1,7 +1,10 @@
 package net.yigitak.todoapp.models;
 
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
@@ -9,13 +12,10 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-@Builder
 @NoArgsConstructor
-@EqualsAndHashCode( onlyExplicitlyIncluded = true, of = { "id" } )
-
+@EqualsAndHashCode( of = { "id" } )
 public class Subtask {
 
-  @EqualsAndHashCode.Include
   private String id = new ObjectId().toHexString();
 
   private String  title;
