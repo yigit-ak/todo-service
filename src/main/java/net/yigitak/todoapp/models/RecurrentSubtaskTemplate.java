@@ -2,14 +2,14 @@ package net.yigitak.todoapp.models;
 
 
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class RecurrentSubtaskTemplate {
 
   @NotEmpty( message = "Task title cannot be empty." )

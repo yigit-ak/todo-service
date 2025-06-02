@@ -24,6 +24,7 @@ public class RecurrenceMapper {
     recurrence.setStartDate( dto.startDate() );
     recurrence.setEndDate( dto.endDate() );
     recurrence.setPeriod( dto.period() );
+    recurrence.setLastOccurrence( null );
 
     return recurrence;
   }

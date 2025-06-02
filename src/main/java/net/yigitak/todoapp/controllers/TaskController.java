@@ -2,6 +2,7 @@ package net.yigitak.todoapp.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.yigitak.todoapp.annotations.JwtSubject;
 import net.yigitak.todoapp.dto.CreateSubtaskDto;
 import net.yigitak.todoapp.dto.CreateTaskDto;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping( "/api/v1/tasks" )
 @RequiredArgsConstructor
+@Slf4j
 public class TaskController {
 
   private final TaskService taskService;
@@ -140,7 +142,7 @@ public class TaskController {
 
   @GetMapping( "/today" )
   public ResponseEntity< List< Task > > getAllTasksAssignedToday ( @JwtSubject String userId ) {
-
+    log.info( "Getting all tasks assigned today for user: {}" , userId );
     LocalDate today    = LocalDate.now();
     List< Task > tasks = dateService.getAllTasksByAssignedDate( userId , today );
     return ResponseEntity.ok( tasks );

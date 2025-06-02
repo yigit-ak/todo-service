@@ -1,10 +1,7 @@
 package net.yigitak.todoapp.models;
 
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,6 +17,8 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode( of = { "id" } )
 @Document( "tasks" )

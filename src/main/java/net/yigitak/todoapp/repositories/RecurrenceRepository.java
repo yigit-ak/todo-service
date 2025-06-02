@@ -13,12 +13,20 @@ import java.util.Optional;
 public interface RecurrenceRepository
     extends MongoRepository< Recurrence, String > {
 
-  @Query( "{ '$and': [ " + "{ 'ownerId': ?0 }, " + "{ 'endDate': { $gte: ?1 } }, " +
-          "{ 'lastOccurrence': { $lt:  ?1 } } " + "] }" )
-  List< Recurrence > findAllByOwnerIdBetweenLastOccurrenceAndEndDateFor (
-      String ownerId ,
-      LocalDate date
-  );
+  @Query( """
+          {
+            "ownerId": ?0,
+            "$or": [
+              { "endDate": { "$exists": false } },
+              { "endDate": { "$gte": ?1 } }
+            ],
+            "$or": [
+              { "lastOccurrence": { "$exists": false } },
+              { "lastOccurrence": { "$lt": ?1 } }
+            ]
+          }
+          """ )
+  List< Recurrence > findAllValid ( String ownerId , LocalDate date );
 
   List< Recurrence > findAllByOwnerId ( String ownerId );
 
