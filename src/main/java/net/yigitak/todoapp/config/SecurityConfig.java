@@ -1,6 +1,7 @@
 package net.yigitak.todoapp.config;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,6 +16,9 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
+    @Value("app.spa.url")
+    private String spaUrl;
 
   @Bean
   public SecurityFilterChain filterChain ( HttpSecurity http ) throws Exception {
@@ -35,7 +39,7 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource ( ) {
 
     CorsConfiguration cfg = new CorsConfiguration();
-    cfg.setAllowedOrigins( List.of( "http://localhost:5173" ) );   // SPA origin
+      cfg.setAllowedOrigins(List.of(spaUrl)); // SPA origin
     cfg.setAllowedMethods( List.of( "GET" , "POST" , "PUT" , "DELETE" , "OPTIONS" ) );
     cfg.setAllowedHeaders( List.of( "*" ) );
     cfg.setAllowCredentials( true ); // only if you send cookies; OK for Bearer-token too

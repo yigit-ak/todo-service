@@ -45,7 +45,7 @@ public class RecurrenceController {
         .path( "/{id}" )
         .buildAndExpand( newRecurrence.getId() )
         .toUri();
-    return ResponseEntity.created( location ).build();
+    return ResponseEntity.created(location).body(newRecurrence);
   }
 
 

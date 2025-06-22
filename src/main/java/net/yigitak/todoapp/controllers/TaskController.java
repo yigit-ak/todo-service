@@ -53,7 +53,7 @@ public class TaskController {
         .path( "/{id}" )
         .buildAndExpand( newTask.getId() )
         .toUri();
-    return ResponseEntity.created( location ).build();
+      return ResponseEntity.created(location).body(newTask);
   }
 
 
@@ -129,7 +129,7 @@ public class TaskController {
   }
 
 
-  @GetMapping( "/date" )
+    @GetMapping("/")
   public ResponseEntity< List< Task > > getAllTasksAssignedOn (
       @JwtSubject String userId ,
       @RequestParam @DateTimeFormat( iso = DateTimeFormat.ISO.DATE ) LocalDate date

@@ -19,3 +19,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCE_SERVER_JWT_ISSUER_URI}
+
+app:
+  spa:
+    url: ${TODO_APP_SPA_URL}
