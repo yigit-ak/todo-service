@@ -17,7 +17,7 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    @Value("app.spa.url")
+    @Value("${app.spa.url}")
     private String spaUrl;
 
   @Bean
