@@ -23,7 +23,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping( "/api/v1/tasks" )
+@RequestMapping("v1/tasks")
 @RequiredArgsConstructor
 @Slf4j
 public class TaskController {

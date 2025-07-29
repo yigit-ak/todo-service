@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping( "api/v1/recurrences" )
+@RequestMapping("v1/recurrences")
 @RequiredArgsConstructor
 public class RecurrenceController {
 
